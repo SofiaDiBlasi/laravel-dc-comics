@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Comic;
 use Database\Seeders\ComicTableSeeder;
 
@@ -37,7 +38,7 @@ class ComicController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data =  $this->validateComic( $request->all() );
 
         $newComic = new Comic();
         $newComic->title = $data['title'];
@@ -86,7 +87,7 @@ class ComicController extends Controller
      */
     public function update(Request $request, Comic $comic)
     {
-        $data = $request->all();
+        $data =  $this->validateComic( $request->all() );
 
         $comic->title = $data['title'];
         $comic->description = $data['description'];
@@ -112,5 +113,52 @@ class ComicController extends Controller
     {
         $comic->delete();
         return redirect()->route('home');
+    }
+
+    private function validateComic($data) {
+        $validator = Validator::make($data, [
+            "title" => "required|min:5|max:50",
+            "description" => "required|min:5|max:65535",
+            "thumb" => "required|max:65535",
+            "price" => "required|min:2|max:255",
+            "series" => "required|min:5|max:255",
+            "sale_date" => "required|max:20",
+            "artists" => "required|max:20",
+            "writers" => "required|max:20",
+            "type" => "required|max:20",
+        ], [
+            "title.required" => "Il titolo è obbligatorio",
+            "title.min" => "Il titolo deve essere almeno di :min caratteri",
+            "title.max"=> "Il titolo è troppo lungo",
+
+            "description.required" => "La descrizione è obbligatoria",
+            "description.min" => "La descrizione deve essere almeno di :min caratteri",
+            "description.max"=> "La descrizione è troppo lunga",
+
+            "thumb.required" => "L'immagine è obbligatoria",
+            "thumb.max"=> "Link immagine non valido",
+
+            "price.required" => "Il prezzo è obbligatorio",
+            "price.min" => "Il prezzo deve essere almeno di :min caratteri",
+            "price.max"=> "Il prezzo è troppo lungo",
+
+            "series.required" => "La serie  è obbligatoria",
+            "series.min" => "La serie deve essere almeno di :min caratteri",
+            "series.max"=> "La serie è troppo lunga",
+
+            "sale_date.required" => "La data è obbligatoria",
+            "sale_date.max"=> "La data  è troppo lunga",
+
+            "artists.required" => "L'artista è obbligatorio",
+            "artists.max"=> "L'artistaè troppo lungo",
+
+            "writers.required" => "L'autore è obbligatorio",
+            "writers.max"=> "L'autore è troppo lungo",
+
+            "type.required" => "Il tipo è obbligatorio",
+            "type.max"=> "Il tipo è troppo lungo",
+        ])->validate();
+
+        return $validator;
     }
 }
