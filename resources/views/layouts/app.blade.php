@@ -13,14 +13,12 @@
 
 <body class="">
     <!--  Includo l'header del sito web con il menu tramite un partial -->
-    @include('partials.header')
 
     <main>
         @yield('content')
     </main>
 
     <!-- Includo il footer del sito web tramite un partial -->
-    @include('partials.footer')
 
     <!-- Assets JS/CSS -->
     @vite('resources/js/app.js')
