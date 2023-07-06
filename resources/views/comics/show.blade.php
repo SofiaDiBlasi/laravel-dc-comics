@@ -6,6 +6,12 @@
     <div class="row g-4">
         <div class="col">
             <a class="btn btn-primary" href="{{ route("home") }}">Torna alla lista fumetti</a>
+            <a class="btn btn-primary" href="{{ route("comics.edit", $comic) }}">Modifica questo prodotto</a>
+            <form action="{{ route('comics.destroy', $comic) }}" method="post">
+                @csrf
+                @method('DELETE')
+                <input class="btn btn-danger" type="submit" value="Cancella il prodotto">
+            </form>
         </div>
     </div>
     <br>
